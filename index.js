@@ -81,7 +81,7 @@ async function main() {
 	try {
 		const messages = extractCommitMessages();
 		const metadata = [];
-
+		core.info( 'Commit messages: '+messages.join( '\n' ) );
 		for ( let i = 0; i < messages.length; i++ ) {
 			const msg = messages[ i ];
 			let metadataBlock = msg.match( RE_YAML_BLOCK );
