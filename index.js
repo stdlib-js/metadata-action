@@ -52,7 +52,7 @@ function extractCommitMessages() {
 	case 'push': {
 		const commits = payload.commits;
 		if ( commits ) {
-			for ( let i = 0; i < commits.length; i++ ) ) {
+			for ( let i = 0; i < commits.length; i++ ) {
 				const commit = commits[ i ];
 				if ( commit.message ) {
 					out.push( commit.message );
