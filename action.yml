@@ -1,0 +1,15 @@
+name: Commit Metadata Action
+description: Extract metadata from commit message for use in follow-up tasks.
+author: Philipp Burckhardt <pburckhardt@outlook.com>
+
+runs:
+  using: node12
+  main: index.js
+
+outputs:
+  metadata:
+    description: "Metadata extracted from commit message"
+
+branding:
+  icon: send
+  color: greene sum of the inputs'
