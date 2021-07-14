@@ -74,19 +74,28 @@ const RE_YAML_BLOCK = /^(?:\s*)---([\S\s]*?)---/;
 
 // MAIN //
 
+/**
+* Main function.
+*/ 
 async function main() {
 	try {
 		const messages = extractCommitMessages();
-		core.info( messages );
+		const metadata = [];
 
-		let metadata = messages[ 0 ].match( RE_YAML_BLOCK );
-		if ( metadata ) {
-			// Extract the capture group:
-			metadata = metadata[ 1 ];
-			core.info( metadata );
-		} else {
-			core.info( 'No metadata block found in commit message.' );
+		for ( let i = 0; i < messages.length; i++ ) {
+			const msg = messages[ i ];
+			let metadataBlock = msg.match( RE_YAML_BLOCK );
+			if ( metadataBlock ) {
+				// Extract the first capture group containing the YAML block:
+				metadataBlock = metadataBlock[ 1 ];
+				core.info( metadataBlock );
+				metadata.push( yaml.safeLoad( metadata ) );
+			}
 		}
+		if ( !metadata.length ) {
+			core.info( 'No metadata block found in commit messages.' );
+		} 
+		core.setOutput( 'metadata', metadata )
 	} catch ( e ) {
 		core.error( e );
 		core.setFailed( e.message );
