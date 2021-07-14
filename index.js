@@ -33,9 +33,13 @@ const yaml = require( 'js-yaml' );
 */
 function extractCommitMessages() {
 	const out = [];
+	const payload = github.context.payload;
+	if ( !payload ) {
+		return out;
+	}
 	switch ( github.context.eventName ) {
 	case 'pull_request': {
-		const pullRequest = github.context.payload?.pull_request;
+		const pullRequest = payload.pull_request;
 		if ( pullRequest ) {
 			let msg = pullRequest.title;
 			if ( pullRequest.body ) {
@@ -46,7 +50,7 @@ function extractCommitMessages() {
 		return out;
 	}
 	case 'push': {
-		const commits = github.context.payload?.commits;
+		const commits = payload.commits;
 		if ( commits ) {
 			for ( let i = 0; i < commits.length; i++ ) ) {
 				const commit = commits[ i ];
