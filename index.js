@@ -23,6 +23,11 @@ const github = require( '@actions/github' );
 const yaml = require( 'js-yaml' );
 
 
+// VARIABLES //
+
+const RE_YAML_BLOCK = /---([\S\s]*?)---/;
+
+
 // FUNCTIONS //
 
 /**
@@ -67,11 +72,6 @@ function extractCommitMessages() {
 }
 
 
-// VARIABLES //
-
-const RE_YAML_BLOCK = /---([\S\s]*?)---/;
-
-
 // MAIN //
 
 /**
@@ -81,7 +81,7 @@ async function main() {
 	try {
 		const messages = extractCommitMessages();
 		const metadata = [];
-		core.info( 'Commit messages: '+messages.join( '\n' ) );
+		core.debug( 'Commit messages: '+messages.join( '\n' ) );
 		for ( let i = 0; i < messages.length; i++ ) {
 			const msg = messages[ i ];
 			let metadataBlock = msg.match( RE_YAML_BLOCK );
@@ -89,7 +89,7 @@ async function main() {
 				// Extract the first capture group containing the YAML block:
 				metadataBlock = metadataBlock[ 1 ];
 				core.info( metadataBlock );
-				metadata.push( yaml.safeLoad( metadata ) );
+				metadata.push( yaml.load( metadata ) );
 			}
 		}
 		if ( !metadata.length ) {
