@@ -36,6 +36,7 @@ name: Test GitHub Action
 on:
   push:
 
+# Workflow jobs:
 jobs:
   test:
     # Define the type of virtual host machine on which to run the job:
