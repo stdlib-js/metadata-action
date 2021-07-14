@@ -69,7 +69,7 @@ function extractCommitMessages() {
 
 // VARIABLES //
 
-const RE_YAML_BLOCK = /^(?:\s*)---([\S\s]*?)---/;
+const RE_YAML_BLOCK = /---([\S\s]*?)---/;
 
 
 // MAIN //
