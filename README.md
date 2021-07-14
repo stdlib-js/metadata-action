@@ -59,7 +59,7 @@ jobs:
 
   * `metadata`: The array of metadata extracted from the commit messages.
 
-Metadata should be supplied as a block of YAML code in the commit message enclosed with `---` characters at the beginning and end of the block. The metadata blocks from all commit message in a push or pull request is parsed and stored in the output `metadata` array. For example, take the following commit message:
+Metadata should be supplied as a block of YAML code in the commit message enclosed with `---` characters at the beginning and end of the block. The metadata blocks from all commit message in a push or pull request are parsed and stored in the output `metadata` array. For example, take the following commit message:
 
 ```txt
 This commit has a metadata block.
