@@ -11,4 +11,9 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-      - uses: ./
+      - id: extract-metadata
+        uses: ./
+      - name: Log output of the previous step
+        run: |
+          echo "This is the output of the previous step:"   
+          echo ${{ steps.extract-metadata.outputs.metadata }}
