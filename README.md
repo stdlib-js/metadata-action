@@ -59,6 +59,30 @@ jobs:
 
   * `metadata`: The array of metadata extracted from the commit messages.
 
+Metadata should be supplied as a block of YAML code in the commit message enclosed with `---` characters at the beginning and end of the block. The metadata blocks from all commit message in a push or pull request is parsed and stored in the output `metadata` array. For example, take the following commit message:
+
+```txt
+This commit has a metadata block.
+
+---
+type: tweet
+author: "@kgryte, @Planeshifter"
+status: This is a test tweet
+---
+```
+
+The `metadata` array would contain the following:
+
+```json
+[
+    {
+        "type": "tweet",
+        "author": "@kgryte, @Planeshifter",
+        "status": "This is a test tweet"
+    }
+]
+```
+
 ## License
 
 See [LICENSE][stdlib-license].

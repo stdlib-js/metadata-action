@@ -89,7 +89,6 @@ async function main() {
 				// Extract the first capture group containing the YAML block:
 				metadataBlock = metadataBlock[ 1 ];
 				const yamlObj = yaml.load( metadataBlock );
-				core.info( yamlObj );
 				metadata.push( yamlObj );
 			}
 		}
