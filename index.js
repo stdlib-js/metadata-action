@@ -23,6 +23,46 @@ const github = require( '@actions/github' );
 const yaml = require( 'js-yaml' );
 
 
+// FUNCTIONS //
+
+/**
+* Extracts the commit messages from the payload of a GitHub action event.
+*
+* @private
+* @returns {Array} commit messages
+*/
+function extractCommitMessages() {
+	const out = [];
+	switch ( github.context.eventName ) {
+	case 'pull_request': {
+		const pullRequest = github.context.payload?.pull_request;
+		if ( pullRequest ) {
+			let msg = pullRequest.title;
+			if ( pullRequest.body ) {
+				msg = msg.concat( '\n\n', pullRequest.body );
+			}
+			out.push( msg );
+		}
+		return out;
+	}
+	case 'push': {
+		const commits = github.context.payload?.commits;
+		if ( commits ) {
+			for ( let i = 0; i < commits.length; i++ ) ) {
+				const commit = commits[ i ];
+				if ( commit.message ) {
+					out.push( commit.message );
+				}
+			}
+		}
+		return out;
+	}
+	default:
+		throw new Error( `Unsupported event type: ${github.context.eventName}` );
+	}
+}
+
+
 // VARIABLES //
 
 const RE_YAML_BLOCK = /^(?:\s*)---([\S\s]*?)---/;
@@ -32,12 +72,10 @@ const RE_YAML_BLOCK = /^(?:\s*)---([\S\s]*?)---/;
 
 async function main() {
 	try {
-		const context = github.context;
-		const { event } = context.payload;
-		const message = event.head_commit.message;
-		core.info( message );
+		const messages = extractCommitMessages();
+		core.info( messages );
 
-		let metadata = message.match( RE_YAML_BLOCK );
+		let metadata = messages[ 0 ].match( RE_YAML_BLOCK );
 		if ( metadata ) {
 			// Extract the capture group:
 			metadata = metadata[ 1 ];
