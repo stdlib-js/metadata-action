@@ -33,18 +33,18 @@ const RE_YAML_BLOCK = /^(?:\s*)---([\S\s]*?)---/;
 async function main() {
 	try {
 		const context = github.context;
-        const event = context.event;
-        const message = event.head_commit.message;
-        core.info( message );
+		const event = context.event;
+		const message = event.head_commit.message;
+		core.info( message );
 
 		let metadata = message.match( RE_YAML_BLOCK );
 		if ( metadata ) {
 			// Extract the capture group:
 			metadata = metadata[ 1 ];
-            core.info( metadata );
-        } else {
-            core.info( 'No metadata block found in commit message.' );
-        }
+			core.info( metadata );
+		} else {
+			core.info( 'No metadata block found in commit message.' );
+		}
 	} catch ( e ) {
 		core.error( e );
 		core.setFailed( e.message );
