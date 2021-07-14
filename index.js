@@ -20,15 +20,31 @@
 
 const core = require( '@actions/core' );
 const github = require( '@actions/github' );
+const yaml = require( 'js-yaml' );
+
+
+// VARIABLES //
+
+const RE_YAML_BLOCK = /^(?:\s*)---([\S\s]*?)---/;
 
 
 // MAIN //
 
 async function main() {
 	try {
-        const event = github.event;
+		const context = github.context;
+        const event = context.event;
         const message = event.head_commit.message;
-        console.log( message );
+        core.info( message );
+
+		let metadata = message.match( RE_YAML_BLOCK );
+		if ( metadata ) {
+			// Extract the capture group:
+			metadata = metadata[ 1 ];
+            core.info( metadata );
+        } else {
+            core.info( 'No metadata block found in commit message.' );
+        }
 	} catch ( e ) {
 		core.error( e );
 		core.setFailed( e.message );
