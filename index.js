@@ -33,7 +33,7 @@ const RE_YAML_BLOCK = /^(?:\s*)---([\S\s]*?)---/;
 async function main() {
 	try {
 		const context = github.context;
-		const event = context.event;
+		const { event } = context.payload;
 		const message = event.head_commit.message;
 		core.info( message );
 
