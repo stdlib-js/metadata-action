@@ -1,5 +1,5 @@
 name: Commit Metadata Action
-description: Extract metadata from commit message for use in follow-up tasks.
+description: Extract metadata from commit messages for use in follow-up tasks.
 author: Philipp Burckhardt <pburckhardt@outlook.com>
 
 runs:
@@ -8,7 +8,7 @@ runs:
 
 outputs:
   metadata:
-    description: "Metadata extracted from commit message"
+    description: "Array of metadata extracted from commit messages"
 
 branding:
   icon: send

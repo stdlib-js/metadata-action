@@ -88,8 +88,9 @@ async function main() {
 			if ( metadataBlock ) {
 				// Extract the first capture group containing the YAML block:
 				metadataBlock = metadataBlock[ 1 ];
-				core.info( metadataBlock );
-				metadata.push( yaml.load( metadata ) );
+				const yamlObj = yaml.load( metadataBlock );
+				core.info( yamlObj );
+				metadata.push( yamlObj );
 			}
 		}
 		if ( !metadata.length ) {
