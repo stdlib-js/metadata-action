@@ -34,6 +34,7 @@ const RE_YAML_BLOCK = /---([\S\s]*?)---/g;
 /**
 * Extracts the subject line of a commit.
 * 
+* @private
 * @param {string} message - commit message
 * @returns {string} subject line of commit
 */
