@@ -13,6 +13,7 @@
     "dependencies": {
         "@actions/core": "^1.3.0",
         "@actions/github": "^5.0.0",
+        "@stdlib/assert-is-null": "^0.0.5",
         "js-yaml": "^4.1.0"
     }
 }

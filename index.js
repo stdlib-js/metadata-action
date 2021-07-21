@@ -20,6 +20,7 @@
 
 const core = require( '@actions/core' );
 const github = require( '@actions/github' );
+const isNull = require( '@stdlib/assert-is-null' );
 const yaml = require( 'js-yaml' );
 
 
@@ -43,25 +44,12 @@ function extractCommitMessages() {
 		return out;
 	}
 	switch ( github.context.eventName ) {
-	case 'pull_request': {
-		const pullRequest = payload.pull_request;
-		if ( pullRequest ) {
-			let msg = pullRequest.title;
-			if ( pullRequest.body ) {
-				msg = msg.concat( '\n\n', pullRequest.body );
-			}
-			out.push({
-				message: msg,
-				...pullRequest
-			});
-		}
-		return out;
-	}
 	case 'push': {
 		const commits = payload.commits;
 		if ( commits ) {
 			for ( let i = 0; i < commits.length; i++ ) {
 				const commit = commits[ i ];
+				core.debug( 'Processing commit: '+JSON.stringify( commit ) );
 				if ( commit.message ) {
 					out.push({
 						message: commit.message,
@@ -92,9 +80,8 @@ async function main() {
 		core.debug( 'Commit messages: '+messages.join( '\n' ) );
 		for ( let i = 0; i < messages.length; i++ ) {
 			const { author, id, message, url } = messages[ i ];
-			core.info( 'Processing commit: '+JSON.stringify( messages[ i ] ) );
-			let metadataBlock = message.match( RE_YAML_BLOCK );
-			if ( metadataBlock ) {
+			let metadataBlock = RE_YAML_BLOCK.exec( message );
+			while ( !isNull( metadataBlock ) ) {
 				// Extract the first capture group containing the YAML block:
 				metadataBlock = metadataBlock[ 1 ];
 				const meta = yaml.load( metadataBlock );
@@ -102,6 +89,7 @@ async function main() {
 				meta.id = id;
 				meta.url = url; 
 				metadata.push( meta );
+				metadataBlock = RE_YAML_BLOCK.exec( message );
 			}
 		}
 		if ( !metadata.length ) {
