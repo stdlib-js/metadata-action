@@ -32,6 +32,16 @@ const RE_YAML_BLOCK = /---([\S\s]*?)---/g;
 // FUNCTIONS //
 
 /**
+* Extracts the subject line of a commit.
+* 
+* @param {string} message - commit message
+* @returns {string} subject line of commit
+*/
+function extractSubjectFromCommitMessage( message ) {
+	return message.split( '\n' )[ 0 ];
+}
+
+/**
 * Extracts the commit messages from the payload of a GitHub action event.
 *
 * @private
@@ -85,6 +95,7 @@ async function main() {
 				// Extract the first capture group containing the YAML block:
 				metadataBlock = metadataBlock[ 1 ];
 				const meta = yaml.load( metadataBlock );
+				meta.description = meta.description || extractSubjectFromCommitMessage( message );
 				meta.author = author;
 				meta.id = id;
 				meta.url = url; 

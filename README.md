@@ -60,29 +60,64 @@ jobs:
 
   * `metadata`: The array of metadata extracted from the commit messages.
 
-Metadata should be supplied as a block of YAML code in the commit message enclosed with `---` characters at the beginning and end of the block. The metadata blocks from all commit message in a push or pull request are parsed and stored in the output `metadata` array. For example, take the following commit message:
+Metadata should be supplied as one or more blocks of YAML code in the commit message enclosed with `---` characters at the beginning and end of each block. The metadata blocks from all commit messages in a push are parsed and stored in the output `metadata` array. For example, take the following commit message:
 
 ```txt
 This commit has a metadata block.
 
 ---
-type: tweet
-author: "@kgryte, @Planeshifter"
-status: This is a test tweet
+type: feature
+description: This is a description of the feature.
 ---
 ```
 
-The `metadata` array would contain the following:
+The corresponding `metadata` array may look like the following:
 
 ```json
 [
     {
-        "type": "tweet",
-        "author": "@kgryte, @Planeshifter",
-        "status": "This is a test tweet"
+        "type": "feature",
+        "description": "This is a description of the feature.",
+        "author":{
+            "email": "pburckhardt@outlook.com",
+            "name": "Planeshifter",
+            "username": "Planeshifter"
+        },
+        "id":"762f39accd4d574db3f1c1480304dddc573840d8",
+        "url":"https://github.com/stdlib-js/commit-metadata-action/commit/762f39accd4d574db3f1c1480304dddc573840d8"
     }
 ]
 ```
+
+The `description` field is special insofar as it will be populated with the commit message in case where the YAML block does not contain a `description` field. Hence, the following commit message:
+
+```txt
+This commit has a metadata block.
+
+---
+type: feature
+---
+```
+
+may lead to the following `metadata` array:
+
+```json
+[
+    {
+        "type": "feature",
+        "description": "This commit has a metadata block.",
+        "author":{
+            "email": "pburckhardt@outlook.com",
+            "name": "Planeshifter",
+            "username": "Planeshifter"
+        },
+        "id":"762f39accd4d574db3f1c1480304dddc573840d8",
+        "url":"https://github.com/stdlib-js/commit-metadata-action/commit/762f39accd4d574db3f1c1480304dddc573840d8"
+    }
+] 
+```
+
+Otherwise, all the fields in the YAML block are copied verbatim. Fields `author`, `id`, and `url` are special in that they are populated with the information from the commit object and thus should not be supplied in the metadata block.
 
 ## License
 
