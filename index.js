@@ -51,7 +51,8 @@ function extractCommitMessages() {
 				msg = msg.concat( '\n\n', pullRequest.body );
 			}
 			out.push({
-				message: msg 
+				message: msg,
+				...pullRequest
 			});
 		}
 		return out;
@@ -64,7 +65,9 @@ function extractCommitMessages() {
 				if ( commit.message ) {
 					out.push({
 						message: commit.message,
-						...commit
+						url: commit.url,
+						id: commit.id,
+						author: commit.author
 					});
 				}
 			}
@@ -88,13 +91,16 @@ async function main() {
 		const metadata = [];
 		core.debug( 'Commit messages: '+messages.join( '\n' ) );
 		for ( let i = 0; i < messages.length; i++ ) {
-			const { message } = messages[ i ];
+			const { author, id, message, url } = messages[ i ];
 			core.info( 'Processing commit: '+JSON.stringify( messages[ i ] ) );
 			let metadataBlock = message.match( RE_YAML_BLOCK );
 			if ( metadataBlock ) {
 				// Extract the first capture group containing the YAML block:
 				metadataBlock = metadataBlock[ 1 ];
 				const meta = yaml.load( metadataBlock );
+				meta.author = author;
+				meta.id = id;
+				meta.url = url; 
 				metadata.push( meta );
 			}
 		}
