@@ -20,6 +20,7 @@
 
 const core = require( '@actions/core' );
 const github = require( '@actions/github' );
+const isNull = require( '@stdlib/assert-is-null' );
 const yaml = require( 'js-yaml' );
 
 
@@ -48,7 +49,7 @@ function extractCommitMessages() {
 		if ( commits ) {
 			for ( let i = 0; i < commits.length; i++ ) {
 				const commit = commits[ i ];
-				core.info( 'Processing commit: '+JSON.stringify( commit ) );
+				core.debug( 'Processing commit: '+JSON.stringify( commit ) );
 				if ( commit.message ) {
 					out.push({
 						message: commit.message,
@@ -79,8 +80,8 @@ async function main() {
 		core.debug( 'Commit messages: '+messages.join( '\n' ) );
 		for ( let i = 0; i < messages.length; i++ ) {
 			const { author, id, message, url } = messages[ i ];
-			let metadataBlock = message.match( RE_YAML_BLOCK );
-			if ( metadataBlock ) {
+			let metadataBlock = RE_YAML_BLOCK.exec( message );
+			while ( !isNull( metadataBlock ) ) {
 				// Extract the first capture group containing the YAML block:
 				metadataBlock = metadataBlock[ 1 ];
 				const meta = yaml.load( metadataBlock );
@@ -88,6 +89,7 @@ async function main() {
 				meta.id = id;
 				meta.url = url; 
 				metadata.push( meta );
+				metadataBlock = RE_YAML_BLOCK.exec( message );
 			}
 		}
 		if ( !metadata.length ) {
