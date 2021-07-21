@@ -1,6 +1,6 @@
 {
     "name": "commit-metadata-action",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Extract metadata from commit messages for use in follow-up tasks.",
     "main": "index.js",
     "scripts": {},
