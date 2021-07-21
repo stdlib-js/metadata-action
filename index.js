@@ -34,7 +34,7 @@ const RE_YAML_BLOCK = /---([\S\s]*?)---/;
 * Extracts the commit messages from the payload of a GitHub action event.
 *
 * @private
-* @returns {Array} commit messages
+* @returns {Array} commit message objects
 */
 function extractCommitMessages() {
 	const out = [];
@@ -50,7 +50,9 @@ function extractCommitMessages() {
 			if ( pullRequest.body ) {
 				msg = msg.concat( '\n\n', pullRequest.body );
 			}
-			out.push( msg );
+			out.push({
+				message: msg 
+			});
 		}
 		return out;
 	}
@@ -60,7 +62,10 @@ function extractCommitMessages() {
 			for ( let i = 0; i < commits.length; i++ ) {
 				const commit = commits[ i ];
 				if ( commit.message ) {
-					out.push( commit.message );
+					out.push({
+						message: commit.message,
+						...commit
+					});
 				}
 			}
 		}
@@ -83,13 +88,14 @@ async function main() {
 		const metadata = [];
 		core.debug( 'Commit messages: '+messages.join( '\n' ) );
 		for ( let i = 0; i < messages.length; i++ ) {
-			const msg = messages[ i ];
-			let metadataBlock = msg.match( RE_YAML_BLOCK );
+			const { message } = messages[ i ];
+			core.info( 'Processing commit: '+JSON.stringify( messages[ i ] ) );
+			let metadataBlock = message.match( RE_YAML_BLOCK );
 			if ( metadataBlock ) {
 				// Extract the first capture group containing the YAML block:
 				metadataBlock = metadataBlock[ 1 ];
-				const yamlObj = yaml.load( metadataBlock );
-				metadata.push( yamlObj );
+				const meta = yaml.load( metadataBlock );
+				metadata.push( meta );
 			}
 		}
 		if ( !metadata.length ) {
