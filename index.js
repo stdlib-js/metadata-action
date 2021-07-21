@@ -26,7 +26,7 @@ const yaml = require( 'js-yaml' );
 
 // VARIABLES //
 
-const RE_YAML_BLOCK = /---([\S\s]*?)---/;
+const RE_YAML_BLOCK = /---([\S\s]*?)---/g;
 
 
 // FUNCTIONS //
