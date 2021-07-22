@@ -11,5 +11,5 @@ outputs:
     description: "Array of metadata extracted from commit messages"
 
 branding:
-  icon: send
-  color: greene sum of the inputs'
+  icon: box
+  color: green
