@@ -45,7 +45,7 @@ jobs:
         run: |
           npm install
       - id: extract-metadata
-        uses: stdlib-js/commit-metadata-action@v1.0
+        uses: stdlib-js/commit-metadata-action@v1
       - name: Log output of the previous step
         run: |
           echo "This is the output of the previous step:"   
