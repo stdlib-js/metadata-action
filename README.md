@@ -18,13 +18,9 @@ limitations under the License.
 
 -->
 
----
-
 # Commit Metadata Action
 
 > A GitHub action to extract metadata from commit messages.
-
----
 
 ## Example Workflow
 
@@ -49,7 +45,7 @@ jobs:
         run: |
           npm install
       - id: extract-metadata
-        uses: ./
+        uses: @stdlib-js/commit-metadata-action
       - name: Log output of the previous step
         run: |
           echo "This is the output of the previous step:"   
@@ -58,9 +54,9 @@ jobs:
 
 ## Outputs 
 
-  * `metadata`: The array of metadata extracted from the commit messages.
+-   `metadata`: the array of metadata extracted from the commit messages.
 
-Metadata should be supplied as one or more blocks of YAML code in the commit message enclosed with `---` characters at the beginning and end of each block. The metadata blocks from all commit messages in a push are parsed and stored in the output `metadata` array. For example, take the following commit message:
+Metadata should be supplied as one or more blocks of YAML code in the commit message enclosed with `---` characters at the beginning and end of each block. The metadata blocks from all commit messages in a push are parsed and stored in the output `metadata` array. For example, given the following commit message:
 
 ```txt
 This commit has a metadata block.
@@ -71,7 +67,7 @@ description: This is a description of the feature.
 ---
 ```
 
-The corresponding `metadata` array may look like the following:
+the corresponding `metadata` array may look like the following:
 
 ```json
 [
@@ -89,7 +85,7 @@ The corresponding `metadata` array may look like the following:
 ]
 ```
 
-The `description` field is special insofar as it will be populated with the commit message in case where the YAML block does not contain a `description` field. Hence, the following commit message:
+The `description` field is special insofar as it will be populated with the commit message when the YAML block does not contain a `description` field. Hence, the following commit message:
 
 ```txt
 This commit has a metadata block.
@@ -117,7 +113,7 @@ may lead to the following `metadata` array:
 ] 
 ```
 
-Otherwise, all the fields in the YAML block are copied verbatim. Fields `author`, `id`, and `url` are special in that they are populated with the information from the commit object and thus should not be supplied in the metadata block.
+Otherwise, all the fields in the YAML block are copied verbatim. The fields `author`, `id`, and `url` are special in that they are populated with the information from the commit object and, thus, should not be supplied in the metadata block.
 
 ## License
 
