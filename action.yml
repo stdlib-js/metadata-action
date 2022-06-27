@@ -4,7 +4,7 @@ author: Philipp Burckhardt <pburckhardt@outlook.com>
 
 runs:
   using: node12
-  main: index.js
+  main: dist/index.js
 
 outputs:
   metadata:
