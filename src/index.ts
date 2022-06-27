@@ -27,6 +27,7 @@ import yaml from 'js-yaml';
 // TYPES //
 
 type CommitMessage = { message: string, url: string, id: string, author: string };
+type MetadataObject = { type?: string, message: string, url: string, id: string, author: string, [key: string]: any };
 
 
 // VARIABLES //
@@ -94,7 +95,7 @@ function extractCommitMessages(): Array<CommitMessage> {
 async function main(): Promise<void> {
 	try {
 		const messages = extractCommitMessages();
-		const metadata: CommitMessage[] = [];
+		const metadata: MetadataObject[] = [];
 		core.debug( 'Commit messages: '+messages.join( '\n' ) );
 		for ( let i = 0; i < messages.length; i++ ) {
 			const { author, id, message, url } = messages[ i ];
