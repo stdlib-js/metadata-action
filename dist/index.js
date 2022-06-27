@@ -76,6 +76,8 @@ function extractCommitMessages() {
 // MAIN //
 /**
 * Main function.
+*
+* @returns {Promise<void>} promise indicating completion
 */
 async function main() {
     try {

@@ -88,8 +88,10 @@ function extractCommitMessages(): Array<CommitMessage> {
 
 /**
 * Main function.
+*
+* @returns {Promise<void>} promise indicating completion
 */ 
-async function main() {
+async function main(): Promise<void> {
 	try {
 		const messages = extractCommitMessages();
 		const metadata: CommitMessage[] = [];
