@@ -5,7 +5,8 @@
     "main": "dist/index.js",
     "scripts": {
         "build": "tsc",
-        "lint": "eslint . --ext .ts"
+        "lint": "eslint . --ext .ts",
+        "prepare": "husky install"
     },
     "keywords": [],
     "author": {

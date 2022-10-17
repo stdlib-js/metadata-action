@@ -21,8 +21,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // MODULES //
-const core_1 = __importDefault(require("@actions/core"));
-const github_1 = __importDefault(require("@actions/github"));
+const core_1 = require("@actions/core");
+const github_1 = require("@actions/github");
 const assert_is_null_1 = __importDefault(require("@stdlib/assert-is-null"));
 const js_yaml_1 = __importDefault(require("js-yaml"));
 // VARIABLES //
@@ -46,17 +46,17 @@ function extractSubjectFromCommitMessage(message) {
 */
 function extractCommitMessages() {
     const out = [];
-    const payload = github_1.default.context.payload;
+    const payload = github_1.context.payload;
     if (!payload) {
         return out;
     }
-    switch (github_1.default.context.eventName) {
+    switch (github_1.context.eventName) {
         case 'push': {
             const commits = payload.commits;
             if (commits) {
                 for (let i = 0; i < commits.length; i++) {
                     const commit = commits[i];
-                    core_1.default.debug('Processing commit: ' + JSON.stringify(commit));
+                    (0, core_1.debug)('Processing commit: ' + JSON.stringify(commit));
                     if (commit.message) {
                         out.push({
                             message: commit.message,
@@ -70,7 +70,7 @@ function extractCommitMessages() {
             return out;
         }
         default:
-            throw new Error(`Unsupported event type: ${github_1.default.context.eventName}`);
+            throw new Error(`Unsupported event type: ${github_1.context.eventName}`);
     }
 }
 // MAIN //
@@ -83,7 +83,7 @@ async function main() {
     try {
         const messages = extractCommitMessages();
         const metadata = [];
-        core_1.default.debug('Commit messages: ' + messages.join('\n'));
+        (0, core_1.debug)('Commit messages: ' + messages.join('\n'));
         for (let i = 0; i < messages.length; i++) {
             const { author, id, message, url } = messages[i];
             let match = RE_YAML_BLOCK.exec(message);
@@ -100,13 +100,13 @@ async function main() {
             }
         }
         if (!metadata.length) {
-            core_1.default.info('No metadata block found in commit messages.');
+            (0, core_1.info)('No metadata block found in commit messages.');
         }
-        core_1.default.setOutput('metadata', metadata);
+        (0, core_1.setOutput)('metadata', metadata);
     }
     catch (e) {
-        core_1.default.error(e);
-        core_1.default.setFailed(e.message);
+        (0, core_1.error)(e);
+        (0, core_1.setFailed)(e.message);
     }
 }
 main();

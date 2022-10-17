@@ -18,8 +18,8 @@
 
 // MODULES //
 
-import core from '@actions/core';
-import github from '@actions/github';
+import { debug, error, info, setFailed, setOutput } from '@actions/core';
+import { context } from '@actions/github';
 import isNull from '@stdlib/assert-is-null';
 import yaml from 'js-yaml';
 
@@ -56,17 +56,17 @@ function extractSubjectFromCommitMessage( message: string ): string {
 */
 function extractCommitMessages(): Array<CommitMessage> {
 	const out = [];
-	const payload = github.context.payload;
+	const payload = context.payload;
 	if ( !payload ) {
 		return out;
 	}
-	switch ( github.context.eventName ) {
+	switch ( context.eventName ) {
 	case 'push': {
 		const commits = payload.commits;
 		if ( commits ) {
 			for ( let i = 0; i < commits.length; i++ ) {
 				const commit = commits[ i ];
-				core.debug( 'Processing commit: '+JSON.stringify( commit ) );
+				debug( 'Processing commit: '+JSON.stringify( commit ) );
 				if ( commit.message ) {
 					out.push({
 						message: commit.message,
@@ -80,7 +80,7 @@ function extractCommitMessages(): Array<CommitMessage> {
 		return out;
 	}
 	default:
-		throw new Error( `Unsupported event type: ${github.context.eventName}` );
+		throw new Error( `Unsupported event type: ${context.eventName}` );
 	}
 }
 
@@ -96,7 +96,7 @@ async function main(): Promise<void> {
 	try {
 		const messages = extractCommitMessages();
 		const metadata: MetadataObject[] = [];
-		core.debug( 'Commit messages: '+messages.join( '\n' ) );
+		debug( 'Commit messages: '+messages.join( '\n' ) );
 		for ( let i = 0; i < messages.length; i++ ) {
 			const { author, id, message, url } = messages[ i ];
 			let match = RE_YAML_BLOCK.exec( message );
@@ -113,12 +113,12 @@ async function main(): Promise<void> {
 			}
 		}
 		if ( !metadata.length ) {
-			core.info( 'No metadata block found in commit messages.' );
+			info( 'No metadata block found in commit messages.' );
 		} 
-		core.setOutput( 'metadata', metadata )
+		setOutput( 'metadata', metadata )
 	} catch ( e ) {
-		core.error( e );
-		core.setFailed( e.message );
+		error( e );
+		setFailed( e.message );
 	}
 }
 
