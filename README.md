@@ -40,12 +40,12 @@ jobs:
 
     # Define the sequence of job steps...
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install dependencies
         run: |
           npm install
       - id: extract-metadata
-        uses: stdlib-js/commit-metadata-action@v1
+        uses: stdlib-js/commit-metadata-action@v2
       - name: Log output of the previous step
         run: |
           echo "This is the output of the previous step:"   
