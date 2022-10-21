@@ -32,8 +32,8 @@ const RE_YAML_BLOCK = /---([\S\s]*?)---/g;
 * Extracts the subject line of a commit.
 *
 * @private
-* @param {string} message - commit message
-* @returns {string} subject line of commit
+* @param message - commit message
+* @returns subject line of commit
 */
 function extractSubjectFromCommitMessage(message) {
     return message.split('\n')[0];
@@ -42,7 +42,7 @@ function extractSubjectFromCommitMessage(message) {
 * Extracts the commit messages from the payload of a GitHub action event.
 *
 * @private
-* @returns {Array} commit message objects
+* @returns commit message objects
 */
 function extractCommitMessages() {
     const out = [];
@@ -77,7 +77,7 @@ function extractCommitMessages() {
 /**
 * Main function.
 *
-* @returns {Promise<void>} promise indicating completion
+* @returns promise indicating completion
 */
 async function main() {
     try {
