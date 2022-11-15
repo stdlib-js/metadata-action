@@ -124,7 +124,7 @@ async function main() {
                 // Extract the first capture group containing the YAML block:
                 const metadataBlock = match[2];
                 const meta = js_yaml_1.default.load(metadataBlock);
-                meta.author = user;
+                meta.author = user.login;
                 meta.id = id;
                 meta.url = url;
                 metadata.push(meta);

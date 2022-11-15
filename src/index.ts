@@ -136,7 +136,7 @@ async function main(): Promise<void> {
 			// Extract the first capture group containing the YAML block:
 			const metadataBlock = match[ 2 ];
 			const meta = yaml.load( metadataBlock );
-			meta.author = user;
+			meta.author = user.login;		
 			meta.id = id;
 			meta.url = url; 
 			metadata.push( meta );
