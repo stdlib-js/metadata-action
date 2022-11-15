@@ -26,7 +26,7 @@ const github_1 = require("@actions/github");
 const assert_is_null_1 = __importDefault(require("@stdlib/assert-is-null"));
 const js_yaml_1 = __importDefault(require("js-yaml"));
 // VARIABLES //
-const RE_YAML_BLOCK = /---([\S\s]*?)---/g;
+const RE_YAML_BLOCK = /(```(?=yaml)|---)([\S\s]*?)\1/g;
 // FUNCTIONS //
 /**
 * Extracts the subject line of a commit.
@@ -95,7 +95,7 @@ async function main() {
                     let match = RE_YAML_BLOCK.exec(message);
                     while (!(0, assert_is_null_1.default)(match)) {
                         // Extract the first capture group containing the YAML block:
-                        const metadataBlock = match[1];
+                        const metadataBlock = match[2];
                         const meta = js_yaml_1.default.load(metadataBlock);
                         meta.description = meta.description || extractSubjectFromCommitMessage(message);
                         meta.author = author;
@@ -122,7 +122,7 @@ async function main() {
             let match = RE_YAML_BLOCK.exec(body);
             while (!(0, assert_is_null_1.default)(match)) {
                 // Extract the first capture group containing the YAML block:
-                const metadataBlock = match[1];
+                const metadataBlock = match[2];
                 const meta = js_yaml_1.default.load(metadataBlock);
                 meta.author = user;
                 meta.id = id;

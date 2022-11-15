@@ -32,7 +32,7 @@ type MetadataObject = { type?: string, message: string, url: string, id: string,
 
 // VARIABLES //
 
-const RE_YAML_BLOCK = /---([\S\s]*?)---/g;
+const RE_YAML_BLOCK = /(```(?=yaml)|---)([\S\s]*?)\1/g;
 
 
 // FUNCTIONS //
@@ -108,7 +108,7 @@ async function main(): Promise<void> {
 				let match = RE_YAML_BLOCK.exec( message );
 				while ( !isNull( match ) ) {
 					// Extract the first capture group containing the YAML block:
-					const metadataBlock = match[ 1 ];
+					const metadataBlock = match[ 2 ];
 					const meta = yaml.load( metadataBlock );
 					meta.description = meta.description || extractSubjectFromCommitMessage( message );
 					meta.author = author;
@@ -134,7 +134,7 @@ async function main(): Promise<void> {
 		let match = RE_YAML_BLOCK.exec( body );
 		while ( !isNull( match ) ) {
 			// Extract the first capture group containing the YAML block:
-			const metadataBlock = match[ 1 ];
+			const metadataBlock = match[ 2 ];
 			const meta = yaml.load( metadataBlock );
 			meta.author = user;
 			meta.id = id;
