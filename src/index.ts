@@ -32,7 +32,7 @@ type MetadataObject = { type?: string, message: string, url: string, id: string,
 
 // VARIABLES //
 
-const RE_YAML_BLOCK = /(```(?=yaml)|---)([\S\s]*?)\1/g;
+const RE_YAML_BLOCK = /(```(?=yaml)|---)(?:yaml)?([\S\s]*?)\1/g;
 
 
 // FUNCTIONS //

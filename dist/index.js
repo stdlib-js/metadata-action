@@ -26,7 +26,7 @@ const github_1 = require("@actions/github");
 const assert_is_null_1 = __importDefault(require("@stdlib/assert-is-null"));
 const js_yaml_1 = __importDefault(require("js-yaml"));
 // VARIABLES //
-const RE_YAML_BLOCK = /(```(?=yaml)|---)([\S\s]*?)\1/g;
+const RE_YAML_BLOCK = /(```(?=yaml)|---)(?:yaml)?([\S\s]*?)\1/g;
 // FUNCTIONS //
 /**
 * Extracts the subject line of a commit.
