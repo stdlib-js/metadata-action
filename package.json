@@ -1,7 +1,7 @@
 {
-    "name": "commit-metadata-action",
+    "name": "metadata-action",
     "version": "2.0.0",
-    "description": "Extract metadata from commit messages for use in follow-up tasks.",
+    "description": "Extract metadata from commit messages and issue comments for use in follow-up tasks.",
     "main": "dist/index.js",
     "scripts": {
         "build": "tsc",

@@ -18,9 +18,9 @@ limitations under the License.
 
 -->
 
-# Commit Metadata Action
+# Metadata Action
 
-> A GitHub action to extract metadata from commit messages.
+> A GitHub action to extract metadata from commit messages and issue comments.
 
 ## Example Workflow
 
@@ -45,7 +45,7 @@ jobs:
         run: |
           npm install
       - id: extract-metadata
-        uses: stdlib-js/commit-metadata-action@v2
+        uses: stdlib-js/metadata-action@v2
       - name: Log output of the previous step
         run: |
           echo "This is the output of the previous step:"   

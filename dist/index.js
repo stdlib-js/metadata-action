@@ -51,7 +51,9 @@ function extractCommitMessages() {
         return out;
     }
     switch (github_1.context.eventName) {
-        case 'push': {
+        case 'push':
+        case 'pull_request':
+        case 'pull_request_target': {
             const commits = payload.commits;
             if (commits) {
                 for (let i = 0; i < commits.length; i++) {
@@ -80,33 +82,62 @@ function extractCommitMessages() {
 * @returns promise indicating completion
 */
 async function main() {
-    try {
-        const messages = extractCommitMessages();
-        const metadata = [];
-        (0, core_1.debug)('Commit messages: ' + messages.join('\n'));
-        for (let i = 0; i < messages.length; i++) {
-            const { author, id, message, url } = messages[i];
-            let match = RE_YAML_BLOCK.exec(message);
+    switch (github_1.context.eventName) {
+        case 'push':
+        case 'pull_request':
+        case 'pull_request_target': {
+            try {
+                const messages = extractCommitMessages();
+                const metadata = [];
+                (0, core_1.debug)('Commit messages: ' + messages.join('\n'));
+                for (let i = 0; i < messages.length; i++) {
+                    const { author, id, message, url } = messages[i];
+                    let match = RE_YAML_BLOCK.exec(message);
+                    while (!(0, assert_is_null_1.default)(match)) {
+                        // Extract the first capture group containing the YAML block:
+                        const metadataBlock = match[1];
+                        const meta = js_yaml_1.default.load(metadataBlock);
+                        meta.description = meta.description || extractSubjectFromCommitMessage(message);
+                        meta.author = author;
+                        meta.id = id;
+                        meta.url = url;
+                        metadata.push(meta);
+                        match = RE_YAML_BLOCK.exec(message);
+                    }
+                }
+                if (!metadata.length) {
+                    (0, core_1.info)('No metadata block found in commit messages.');
+                }
+                (0, core_1.setOutput)('metadata', metadata);
+            }
+            catch (e) {
+                (0, core_1.error)(e);
+                (0, core_1.setFailed)(e.message);
+            }
+            break;
+        }
+        case 'issue_comment': {
+            const metadata = [];
+            const { user, id, body, url } = github_1.context.payload.comment;
+            let match = RE_YAML_BLOCK.exec(body);
             while (!(0, assert_is_null_1.default)(match)) {
                 // Extract the first capture group containing the YAML block:
                 const metadataBlock = match[1];
                 const meta = js_yaml_1.default.load(metadataBlock);
-                meta.description = meta.description || extractSubjectFromCommitMessage(message);
-                meta.author = author;
+                meta.author = user;
                 meta.id = id;
                 meta.url = url;
                 metadata.push(meta);
-                match = RE_YAML_BLOCK.exec(message);
+                match = RE_YAML_BLOCK.exec(body);
             }
+            if (!metadata.length) {
+                (0, core_1.info)('No metadata block found in commit messages.');
+            }
+            (0, core_1.setOutput)('metadata', metadata);
+            break;
         }
-        if (!metadata.length) {
-            (0, core_1.info)('No metadata block found in commit messages.');
-        }
-        (0, core_1.setOutput)('metadata', metadata);
-    }
-    catch (e) {
-        (0, core_1.error)(e);
-        (0, core_1.setFailed)(e.message);
+        default:
+            (0, core_1.setFailed)(`Unsupported event type: ${github_1.context.eventName}`);
     }
 }
 main();
