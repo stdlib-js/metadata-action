@@ -27,7 +27,7 @@ import yaml from 'js-yaml';
 // TYPES //
 
 type CommitMessage = { message: string, url: string, id: string, author: string };
-type MetadataObject = { type?: string, message: string, url: string, id: string, author: string, [key: string]: any };
+type MetadataObject = { type?: string, message: string, url: string, id: string, author: string, [key: string]: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 
 // VARIABLES //
@@ -110,11 +110,13 @@ async function main(): Promise<void> {
 					// Extract the first capture group containing the YAML block:
 					const metadataBlock = match[ 2 ];
 					const meta = yaml.load( metadataBlock );
-					meta.description = meta.description || extractSubjectFromCommitMessage( message );
-					meta.author = author;
-					meta.id = id;
-					meta.url = url; 
-					metadata.push( meta );
+					if ( meta ) {
+						meta.description = meta.description || extractSubjectFromCommitMessage( message );
+						meta.author = author;
+						meta.id = id;
+						meta.url = url; 
+						metadata.push( meta );
+					}
 					match = RE_YAML_BLOCK.exec( message );
 				}
 			}
@@ -136,10 +138,12 @@ async function main(): Promise<void> {
 			// Extract the first capture group containing the YAML block:
 			const metadataBlock = match[ 2 ];
 			const meta = yaml.load( metadataBlock );
-			meta.author = user.login;		
-			meta.id = id;
-			meta.url = url; 
-			metadata.push( meta );
+			if ( meta ) {
+				meta.author = user.login;		
+				meta.id = id;
+				meta.url = url; 
+				metadata.push( meta );
+			}
 			match = RE_YAML_BLOCK.exec( body );
 		}
 		if ( !metadata.length ) {

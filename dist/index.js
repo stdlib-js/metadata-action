@@ -97,11 +97,13 @@ async function main() {
                         // Extract the first capture group containing the YAML block:
                         const metadataBlock = match[2];
                         const meta = js_yaml_1.default.load(metadataBlock);
-                        meta.description = meta.description || extractSubjectFromCommitMessage(message);
-                        meta.author = author;
-                        meta.id = id;
-                        meta.url = url;
-                        metadata.push(meta);
+                        if (meta) {
+                            meta.description = meta.description || extractSubjectFromCommitMessage(message);
+                            meta.author = author;
+                            meta.id = id;
+                            meta.url = url;
+                            metadata.push(meta);
+                        }
                         match = RE_YAML_BLOCK.exec(message);
                     }
                 }
@@ -124,10 +126,12 @@ async function main() {
                 // Extract the first capture group containing the YAML block:
                 const metadataBlock = match[2];
                 const meta = js_yaml_1.default.load(metadataBlock);
-                meta.author = user.login;
-                meta.id = id;
-                meta.url = url;
-                metadata.push(meta);
+                if (meta) {
+                    meta.author = user.login;
+                    meta.id = id;
+                    meta.url = url;
+                    metadata.push(meta);
+                }
                 match = RE_YAML_BLOCK.exec(body);
             }
             if (!metadata.length) {
