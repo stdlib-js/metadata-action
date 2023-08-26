@@ -21,6 +21,7 @@
 import { debug, error, info, setFailed, setOutput } from '@actions/core';
 import { context } from '@actions/github';
 import isNull from '@stdlib/assert-is-null';
+import isPlainObject from '@stdlib/assert-is-plain-object';
 import yaml from 'js-yaml';
 
 
@@ -110,7 +111,7 @@ async function main(): Promise<void> {
 					// Extract the first capture group containing the YAML block:
 					const metadataBlock = match[ 2 ];
 					const meta = yaml.load( metadataBlock );
-					if ( meta ) {
+					if ( isPlainObject( meta ) ) {
 						meta.description = meta.description || extractSubjectFromCommitMessage( message );
 						meta.author = author;
 						meta.id = id;
@@ -138,7 +139,7 @@ async function main(): Promise<void> {
 			// Extract the first capture group containing the YAML block:
 			const metadataBlock = match[ 2 ];
 			const meta = yaml.load( metadataBlock );
-			if ( meta ) {
+			if ( isPlainObject( meta ) ) {
 				meta.author = user.login;		
 				meta.id = id;
 				meta.url = url; 

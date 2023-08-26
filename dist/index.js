@@ -24,6 +24,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@actions/core");
 const github_1 = require("@actions/github");
 const assert_is_null_1 = __importDefault(require("@stdlib/assert-is-null"));
+const assert_is_plain_object_1 = __importDefault(require("@stdlib/assert-is-plain-object"));
 const js_yaml_1 = __importDefault(require("js-yaml"));
 // VARIABLES //
 const RE_YAML_BLOCK = /(```(?=yaml)|---)(?:yaml)?([\S\s]*?)\1/g;
@@ -97,7 +98,7 @@ async function main() {
                         // Extract the first capture group containing the YAML block:
                         const metadataBlock = match[2];
                         const meta = js_yaml_1.default.load(metadataBlock);
-                        if (meta) {
+                        if ((0, assert_is_plain_object_1.default)(meta)) {
                             meta.description = meta.description || extractSubjectFromCommitMessage(message);
                             meta.author = author;
                             meta.id = id;
@@ -126,7 +127,7 @@ async function main() {
                 // Extract the first capture group containing the YAML block:
                 const metadataBlock = match[2];
                 const meta = js_yaml_1.default.load(metadataBlock);
-                if (meta) {
+                if ((0, assert_is_plain_object_1.default)(meta)) {
                     meta.author = user.login;
                     meta.id = id;
                     meta.url = url;
