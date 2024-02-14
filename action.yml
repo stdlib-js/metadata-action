@@ -3,7 +3,7 @@ description: Extract metadata from commit messages and issue comments for use in
 author: Philipp Burckhardt <pburckhardt@outlook.com>
 
 runs:
-  using: node16
+  using: node20
   main: dist/index.js
 
 outputs:
