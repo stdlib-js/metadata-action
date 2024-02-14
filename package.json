@@ -1,6 +1,6 @@
 {
     "name": "metadata-action",
-    "version": "2.0.2",
+    "version": "3.0.0",
     "description": "Extract metadata from commit messages and issue comments for use in follow-up tasks.",
     "main": "dist/index.js",
     "scripts": {
